@@ -13,7 +13,7 @@ public class Main {
         // Số lượng đề cần sinh
         int numberOfGeneratePuzzles = 60;
 
-        System.out.println("Sinh " + numberOfGeneratePuzzles + " đề Sudoku");
+        System.out.println("Generating " + numberOfGeneratePuzzles + " Sudoku puzzles");
 
         // Tạo thư mục samples
         Files.createDirectories(Paths.get(folderSave));
@@ -31,8 +31,9 @@ public class Main {
             // Lưu đề vào file
             String filename = String.format("%s/Sudoku_%02d.txt", folderSave, i);
             sudokuMatrix.saveToFile(filename);
+            System.out.println("--- Puzzle " + i + " saved to file: " + filename);
 
-            System.out.println("\n--- Đề bài " + i + " (" + emptyCells + " lỗ) ---");
+            System.out.println("\n--- Puzzle " + i + " (" + emptyCells + " empty cells) ---");
             sudokuMatrix.printSudoku();
         }
         // Thời gian kết thúc sinh đề
@@ -44,10 +45,10 @@ public class Main {
         // Thời gian sinh từng đề
         double avgTimePerPuzzle = totalTime / numberOfGeneratePuzzles;
 
-        System.out.println("\n--- 🎯 HIỆU NĂNG 🎯 ---");
-        System.out.println("Hoàn thành sinh " + numberOfGeneratePuzzles + " đề.");
-        System.out.println("Tổng thời gian: " + totalTime + " ms");
-        System.out.println("Thời gian trung bình: " + String.format("%.2f", avgTimePerPuzzle) + " ms/đề");
+        System.out.println("\n--- PERFORMANCE ---");
+        System.out.println("Generated " + numberOfGeneratePuzzles + " puzzles.");
+        System.out.println("Total time: " + totalTime + " ms");
+        System.out.println("Average time per puzzle: " + String.format("%.2f", avgTimePerPuzzle) + " ms");
         System.out.println("---");
     }
 }

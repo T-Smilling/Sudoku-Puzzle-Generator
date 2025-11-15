@@ -2,9 +2,6 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
-/**
- * Lớp SudokuMatrix đại diện cho một bảng Sudoku 9x9.
- */
 public class SudokuMatrix {
     private static final int SIZE = 9;
     private static final int EMPTY_CELL = 0;
