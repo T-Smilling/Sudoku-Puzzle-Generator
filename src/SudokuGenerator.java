@@ -23,7 +23,6 @@ public class SudokuGenerator {
         if (!generateFullSudokuMatrix(sudokuMatrix)){
             throw new RuntimeException("Lỗi sinh sudoku đầy đủ");
         }
-        generateFullSudokuMatrix(sudokuMatrix);
 
         // Xóa một số ô để tạo đề Sudoku và đảm bảo có ít nhất 1 nghiệm
         removeCells(sudokuMatrix, emptyCells);
