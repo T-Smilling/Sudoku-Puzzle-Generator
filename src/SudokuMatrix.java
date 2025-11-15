@@ -90,6 +90,9 @@ public class SudokuMatrix {
     public void saveToFile (String filename) throws IOException {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
             for (int r = 0; r < SIZE; r++) {
+                if (r % 3 == 0 && r != 0) {
+                    writer.write("---------------------\n");
+                }
                 for (int c = 0; c < SIZE; c++) {
                     if (c % 3 == 0 && c != 0) {
                         writer.write("| ");
