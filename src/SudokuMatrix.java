@@ -67,6 +67,9 @@ public class SudokuMatrix {
      */
     public void printSudoku () {
         for (int r = 0; r < SIZE; r++) {
+            if (r % 3 == 0 && r != 0) {
+                System.out.println("---------------------");
+            }
             for (int c = 0; c < SIZE; c++) {
                 if (c % 3 == 0 && c != 0) {
                     System.out.print("| ");
@@ -75,7 +78,7 @@ public class SudokuMatrix {
                 int cell = sudoku[r][c];
                 System.out.print((cell == EMPTY_CELL ? "_" : String.valueOf(cell)) + " ");
             }
-            System.out.println("\n");
+            System.out.println();
         }
         System.out.println("-------------------------");
     }
