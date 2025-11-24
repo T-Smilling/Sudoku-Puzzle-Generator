@@ -64,19 +64,107 @@ public class SudokuGenerator {
     }
 
     /**
-     * Xóa một số ô ngẫu nhiên trong một sudoku đầy đủ.
+     * Xóa một số ô ngẫu nhiên nhưng đảm bảo sudoku có nghiệm duy nhất.
      * @param sudokuMatrix Ma trận Sudoku
      * @param emptyCells Số lượng ô cần xóa
      */
     private void removeCells(SudokuMatrix sudokuMatrix, int emptyCells) {
+        // Danh sách 81 vị trí
+        List<Integer> positions = new ArrayList<>();
+        for (int i = 0; i < SIZE * SIZE; i++) {
+            positions.add(i);
+        }
+        Collections.shuffle(positions);
         int countEmptyCells = 0;
-        while (countEmptyCells < emptyCells) {
-            int row = rand.nextInt(SIZE);
-            int col = rand.nextInt(SIZE);
-            if (sudokuMatrix.getCell(row, col) != EMPTY_CELL) {
+
+        for (int pos : positions){
+            if (countEmptyCells >= emptyCells){
+                break;
+            }
+            // Lấy vị trí và giá trị của ô đó
+            int row = pos / SIZE;
+            int col = pos % SIZE;
+            int val = sudokuMatrix.getCell(row, col);
+            if (val != EMPTY_CELL){
                 sudokuMatrix.setCell(row, col, EMPTY_CELL);
-                countEmptyCells++;
+                // Kiểm tra trên sudoku copy tránh làm hỏng sudoku gốc
+                SudokuMatrix tempSudoku = copySudokuMatrix(sudokuMatrix);
+
+                // Quyết định giữ hay xóa ô
+                if (countSolveSudoku(tempSudoku) == 1){
+                    countEmptyCells++;
+                } else {
+                    sudokuMatrix.setCell(row, col, val);
+                }
             }
         }
+    }
+
+    /**
+     * Tạo bản sao sudoku để kiểm tra nghiệm
+     */
+    private SudokuMatrix copySudokuMatrix(SudokuMatrix sudokuMatrix) {
+        SudokuMatrix newSudoku = new SudokuMatrix();
+        for (int row = 0; row < SIZE; row++) {
+            for (int col = 0; col < SIZE; col++) {
+                newSudoku.setCell(row, col, sudokuMatrix.getCell(row, col));
+            }
+        }
+        return newSudoku;
+    }
+
+    /**
+     * Đếm số lượng nghiệm của Sudoku.
+     * @param matrix Ma trận cần giải
+     */
+    private int countSolveSudoku(SudokuMatrix matrix) {
+        int row = -1;
+        int col = -1;
+        boolean isEmpty = true;
+
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
+                if (matrix.getCell(i, j) == EMPTY_CELL) {
+                    isEmpty = false;
+                    row = i;
+                    col = j;
+                    break;
+                }
+            }
+            if (!isEmpty){
+                break;
+            }
+        }
+
+        // Nếu không còn ô trống có 1 nghiệm
+        if (isEmpty) {
+            return 1;
+        }
+        int count = 0;
+        for (int num = 0; num <= SIZE; num++) {
+            if (matrix.isValidNumber(row, col, num)){
+                matrix.setCell(row, col, num);
+
+                // Đệ quy cộng dồn nghiệm tìm được
+                count += countSolveSudoku(matrix);
+                if (count > 1){
+                    return count;
+                }
+                matrix.setCell(row, col, EMPTY_CELL);
+            }
+        }
+        return count;
+    }
+
+    /**
+     * Kiểm tra thỏa mãn nghiệm duy nhất của đề.
+     * @param matrix Ma trận cần kiêm tra
+     */
+    public boolean checkResult(SudokuMatrix matrix) {
+        SudokuMatrix testMatrix = copySudokuMatrix(matrix);
+
+        int solutions = countSolveSudoku(testMatrix);
+
+        return solutions == 1;
     }
 }
